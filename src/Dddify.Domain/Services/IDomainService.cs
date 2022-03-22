@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Dddify.Domain.Services;
 
-namespace Dddify.Domain.Services
+public interface IDomainService
 {
-    public interface IDomainService
-    {
 
-    }
 }

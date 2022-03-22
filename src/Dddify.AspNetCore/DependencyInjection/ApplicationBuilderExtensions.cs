@@ -4,38 +4,37 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
 using System.Linq;
 
-namespace Microsoft.Extensions.DependencyInjection
+namespace Microsoft.Extensions.DependencyInjection;
+
+public static class ApplicationBuilderExtensions
 {
-    public static class ApplicationBuilderExtensions
+    public static IApplicationBuilder UseDddify(this IApplicationBuilder app)
     {
-        public static IApplicationBuilder UseDddify(this IApplicationBuilder app)
+        Check.NotNull(app, nameof(app));
+
+        app.UseRequestLocalization();
+
+        return app;
+    }
+
+    internal static IApplicationBuilder UseRequestLocalization(this IApplicationBuilder app)
+    {
+        var options = app.ApplicationServices
+            .GetRequiredService<IOptions<AppLocalizationOptions>>()
+            .Value;
+
+        if (options.SupportedCultures.Any())
         {
-            Check.NotNull(app, nameof(app));
+            var localizationOptions = new RequestLocalizationOptions()
+                .AddSupportedCultures(options.SupportedCultures)
+                .AddSupportedUICultures(options.SupportedCultures)
+                .SetDefaultCulture(string.IsNullOrEmpty(options.DefaultCulture) ? options.SupportedCultures[0] : options.DefaultCulture);
 
-            app.UseRequestLocalization();
+            localizationOptions.ApplyCurrentCultureToResponseHeaders = true;
 
-            return app;
+            app.UseRequestLocalization(localizationOptions);
         }
 
-        internal static IApplicationBuilder UseRequestLocalization(this IApplicationBuilder app)
-        {
-            var options = app.ApplicationServices
-                .GetRequiredService<IOptions<AppLocalizationOptions>>()
-                .Value;
-
-            if (options.SupportedCultures.Any())
-            {
-                var localizationOptions = new RequestLocalizationOptions()
-                    .AddSupportedCultures(options.SupportedCultures)
-                    .AddSupportedUICultures(options.SupportedCultures)
-                    .SetDefaultCulture(string.IsNullOrEmpty(options.DefaultCulture) ? options.SupportedCultures[0] : options.DefaultCulture);
-
-                localizationOptions.ApplyCurrentCultureToResponseHeaders = true;
-
-                app.UseRequestLocalization(localizationOptions);
-            }
-
-            return app;
-        }
+        return app;
     }
 }

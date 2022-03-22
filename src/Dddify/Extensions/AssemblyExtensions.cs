@@ -1,36 +1,35 @@
 ﻿using System.Collections.Generic;
 
-namespace System.Reflection
+namespace System.Reflection;
+
+/// <summary>
+/// Extension methods for <see cref="Assembly"/>.
+/// </summary>
+public static class AssemblyExtensions
 {
-    /// <summary>
-    /// Extension methods for <see cref="Assembly"/>.
-    /// </summary>
-    public static class AssemblyExtensions
+    public static string GetFullNamePrefix(this Assembly assembly, string nameSectionSeparator)
     {
-        public static string GetFullNamePrefix(this Assembly assembly, string nameSectionSeparator)
-        {
-            var fullname = assembly.FullName;
-            return fullname.Substring(0, fullname.IndexOf(nameSectionSeparator, StringComparison.Ordinal) + 1);
-        }
+        var fullname = assembly.FullName;
+        return fullname.Substring(0, fullname.IndexOf(nameSectionSeparator, StringComparison.Ordinal) + 1);
+    }
 
-        public static IEnumerable<Assembly> LoadAssemblies(this IEnumerable<AssemblyName> assemblyNames)
-        {
-            var assemblies = new List<Assembly>();
+    public static IEnumerable<Assembly> LoadAssemblies(this IEnumerable<AssemblyName> assemblyNames)
+    {
+        var assemblies = new List<Assembly>();
 
-            foreach (var assemblyName in assemblyNames)
+        foreach (var assemblyName in assemblyNames)
+        {
+            try
             {
-                try
-                {
-                    // Try to load the referenced assembly...
-                    assemblies.Add(Assembly.Load(assemblyName));
-                }
-                catch
-                {
-                    // Failed to load assembly. Skip it.
-                }
+                // Try to load the referenced assembly...
+                assemblies.Add(Assembly.Load(assemblyName));
             }
-
-            return assemblies;
+            catch
+            {
+                // Failed to load assembly. Skip it.
+            }
         }
+
+        return assemblies;
     }
 }

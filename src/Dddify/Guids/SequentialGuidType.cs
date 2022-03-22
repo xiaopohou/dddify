@@ -1,32 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Dddify.Guids
+namespace Dddify.Guids;
+
+/// <summary>
+/// Describes the type of a sequential GUID value.
+/// </summary>
+public enum SequentialGuidType
 {
     /// <summary>
-    /// Describes the type of a sequential GUID value.
+    /// The GUID should be sequential when formatted using the <see cref="Guid.ToString()" /> method.
+    /// Used by MySql and PostgreSql.
     /// </summary>
-    public enum SequentialGuidType
-    {
-        /// <summary>
-        /// The GUID should be sequential when formatted using the <see cref="Guid.ToString()" /> method.
-        /// Used by MySql and PostgreSql.
-        /// </summary>
-        SequentialAsString,
+    SequentialAsString,
 
-        /// <summary>
-        /// The GUID should be sequential when formatted using the <see cref="Guid.ToByteArray" /> method.
-        /// Used by Oracle.
-        /// </summary>
-        SequentialAsBinary,
+    /// <summary>
+    /// The GUID should be sequential when formatted using the <see cref="Guid.ToByteArray" /> method.
+    /// Used by Oracle.
+    /// </summary>
+    SequentialAsBinary,
 
-        /// <summary>
-        /// The sequential portion of the GUID should be located at the end of the Data4 block.
-        /// Used by SqlServer.
-        /// </summary>
-        SequentialAtEnd
-    }
+    /// <summary>
+    /// The sequential portion of the GUID should be located at the end of the Data4 block.
+    /// Used by SqlServer.
+    /// </summary>
+    SequentialAtEnd
 }

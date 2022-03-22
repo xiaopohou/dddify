@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dddify.DependencyInjection
+namespace Dddify.DependencyInjection;
+
+public interface IScanAssemblyMarker
 {
-    public interface IScanAssemblyMarker
-    {
-    }
 }

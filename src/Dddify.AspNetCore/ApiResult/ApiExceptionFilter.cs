@@ -5,97 +5,93 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Dddify.AspNetCore.ApiResult
+namespace Dddify.AspNetCore.ApiResult;
+
+public class ApiExceptionFilter : IExceptionFilter
 {
-    public class ApiExceptionFilter : IExceptionFilter
+    private readonly ILogger<ApiExceptionFilter> _logger;
+    private readonly IApiResultWrapper _apiResultWrapper;
+    private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
+
+    public ApiExceptionFilter(ILogger<ApiExceptionFilter> logger, IApiResultWrapper apiResultWrapper)
     {
-        private readonly ILogger<ApiExceptionFilter> _logger;
-        private readonly IApiResultWrapper _apiResultWrapper;
-        private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
+        _logger = logger;
+        _apiResultWrapper = apiResultWrapper;
 
-        public ApiExceptionFilter(ILogger<ApiExceptionFilter> logger, IApiResultWrapper apiResultWrapper)
+        // Register known exception types and handlers.
+        _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
         {
-            _logger = logger;
-            _apiResultWrapper = apiResultWrapper;
+            { typeof(BadRequestException), HandleBadRequestException },
+            { typeof(NotFoundException), HandleNotFoundException },
+            { typeof(UnauthorizedException), HandleUnauthorizedException },
+            { typeof(ForbiddenException), HandleForbiddenException },
+        };
+    }
 
-            // Register known exception types and handlers.
-            _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
-            {
-                { typeof(BadRequestException), HandleBadRequestException },
-                { typeof(NotFoundException), HandleNotFoundException },
-                { typeof(UnauthorizedException), HandleUnauthorizedException },
-                { typeof(ForbiddenException), HandleForbiddenException },
-            };
+    public void OnException(ExceptionContext context)
+    {
+        _logger.LogError(new EventId(context.Exception.HResult), context.Exception, context.Exception.Message);
+
+        var type = context.Exception.GetType();
+
+        if (_exceptionHandlers.ContainsKey(type))
+        {
+            _exceptionHandlers[type].Invoke(context);
+        }
+        else
+        {
+            HandleUnknownException(context);
         }
 
-        public void OnException(ExceptionContext context)
+        context.ExceptionHandled = true;
+    }
+
+    private void HandleBadRequestException(ExceptionContext context)
+    {
+        var exception = context.Exception as BadRequestException;
+        var apiResult = _apiResultWrapper.Failed(exception.Errors);
+
+        context.Result = new BadRequestObjectResult(apiResult);
+    }
+
+    private void HandleNotFoundException(ExceptionContext context)
+    {
+        var exception = context.Exception as NotFoundException;
+        var apiResult = _apiResultWrapper.Failed(exception.Message);
+
+        context.Result = new NotFoundObjectResult(apiResult);
+    }
+
+    private void HandleUnauthorizedException(ExceptionContext context)
+    {
+        var exception = context.Exception as UnauthorizedException;
+        var apiResult = _apiResultWrapper.Failed(exception.Message);
+
+        context.Result = new ObjectResult(apiResult)
         {
-            _logger.LogError(new EventId(context.Exception.HResult), context.Exception, context.Exception.Message);
+            StatusCode = StatusCodes.Status401Unauthorized
+        };
+    }
 
-            var type = context.Exception.GetType();
+    private void HandleForbiddenException(ExceptionContext context)
+    {
+        var exception = context.Exception as ForbiddenException;
+        var apiResult = _apiResultWrapper.Failed(exception.Message);
 
-            if (_exceptionHandlers.ContainsKey(type))
-            {
-                _exceptionHandlers[type].Invoke(context);
-            }
-            else
-            {
-                HandleUnknownException(context);
-            }
-
-            context.ExceptionHandled = true;
-        }
-
-        private void HandleBadRequestException(ExceptionContext context)
+        context.Result = new ObjectResult(apiResult)
         {
-            var exception = context.Exception as BadRequestException;
-            var apiResult = _apiResultWrapper.Failed(exception.Errors);
+            StatusCode = StatusCodes.Status403Forbidden
+        };
+    }
 
-            context.Result = new BadRequestObjectResult(apiResult);
-        }
+    private void HandleUnknownException(ExceptionContext context)
+    {
+        var apiResult = _apiResultWrapper.Failed("An error occurred while processing your request.");
 
-        private void HandleNotFoundException(ExceptionContext context)
+        context.Result = new ObjectResult(apiResult)
         {
-            var exception = context.Exception as NotFoundException;
-            var apiResult = _apiResultWrapper.Failed(exception.Message);
-
-            context.Result = new NotFoundObjectResult(apiResult);
-        }
-
-        private void HandleUnauthorizedException(ExceptionContext context)
-        {
-            var exception = context.Exception as UnauthorizedException;
-            var apiResult = _apiResultWrapper.Failed(exception.Message);
-
-            context.Result = new ObjectResult(apiResult)
-            {
-                StatusCode = StatusCodes.Status401Unauthorized
-            };
-        }
-
-        private void HandleForbiddenException(ExceptionContext context)
-        {
-            var exception = context.Exception as ForbiddenException;
-            var apiResult = _apiResultWrapper.Failed(exception.Message);
-
-            context.Result = new ObjectResult(apiResult)
-            {
-                StatusCode = StatusCodes.Status403Forbidden
-            };
-        }
-
-        private void HandleUnknownException(ExceptionContext context)
-        {
-            var apiResult = _apiResultWrapper.Failed("An error occurred while processing your request.");
-
-            context.Result = new ObjectResult(apiResult)
-            {
-                StatusCode = StatusCodes.Status500InternalServerError
-            };
-        }
+            StatusCode = StatusCodes.Status500InternalServerError
+        };
     }
 }
