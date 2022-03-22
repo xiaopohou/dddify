@@ -1,7 +1,6 @@
-﻿namespace Dddify.Guids
+﻿namespace Dddify.Guids;
+
+public class SequentialGuidGeneratorOptions
 {
-    public class SequentialGuidGeneratorOptions
-    {
-        public SequentialGuidType SequentialGuidType { get; set; } = SequentialGuidType.SequentialAsString;
-    }
+    public SequentialGuidType SequentialGuidType { get; set; } = SequentialGuidType.SequentialAsString;
 }

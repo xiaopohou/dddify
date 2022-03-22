@@ -6,17 +6,18 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyCompany.MyProject.Infrastructure;
 
+#nullable disable
+
 namespace MyCompany.MyProject.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220301101937_InitialCreate")]
+    [Migration("20220322022933_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.11");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
 
             modelBuilder.Entity("MyCompany.MyProject.Domain.Entities.Todo", b =>
                 {
@@ -25,6 +26,7 @@ namespace MyCompany.MyProject.Infrastructure.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
@@ -116,7 +118,8 @@ namespace MyCompany.MyProject.Infrastructure.Migrations
                                 .HasForeignKey("TodoId");
                         });
 
-                    b.Navigation("Colour");
+                    b.Navigation("Colour")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MyCompany.MyProject.Domain.Entities.TodoItem", b =>

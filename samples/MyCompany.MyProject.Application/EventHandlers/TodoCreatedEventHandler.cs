@@ -4,13 +4,12 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MyCompany.MyProject.Application.DomainEventHandlers
+namespace MyCompany.MyProject.Application.DomainEventHandlers;
+
+public class TodoCreatedEventHandler : IDomainEventHandler<TodoCreatedDomainEvent>
 {
-    public class TodoCreatedEventHandler : IDomainEventHandler<TodoCreatedDomainEvent>
+    public Task Handle(TodoCreatedDomainEvent notification, CancellationToken cancellationToken)
     {
-        public Task Handle(TodoCreatedDomainEvent notification, CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

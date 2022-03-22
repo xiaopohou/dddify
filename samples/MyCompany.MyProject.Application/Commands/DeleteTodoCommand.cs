@@ -7,36 +7,35 @@ using MyCompany.MyProject.Infrastructure;
 using Dddify.Exceptions;
 using MyCompany.MyProject.Domain.Entities;
 
-namespace MyCompany.MyProject.Application.Commands
+namespace MyCompany.MyProject.Application.Commands;
+
+public class DeleteTodoCommand : IRequest
 {
-    public class DeleteTodoCommand : IRequest
+    public Guid Id { get; set; }
+}
+
+public class DeleteTodoCommandHandler : IRequestHandler<DeleteTodoCommand>
+{
+    private readonly ApplicationDbContext _context;
+
+    public DeleteTodoCommandHandler(ApplicationDbContext context)
     {
-        public Guid Id { get; set; }
+        _context = context;
     }
 
-    public class DeleteTodoCommandHandler : IRequestHandler<DeleteTodoCommand>
+    public async Task<Unit> Handle(DeleteTodoCommand request, CancellationToken cancellationToken)
     {
-        private readonly ApplicationDbContext _context;
+        var todo = await _context.Todos.FindAsync(new object[] { request.Id }, cancellationToken);
 
-        public DeleteTodoCommandHandler(ApplicationDbContext context)
+        if (todo == null)
         {
-            _context = context;
+            throw new NotFoundException(nameof(Todo), request.Id);
         }
 
-        public async Task<Unit> Handle(DeleteTodoCommand request, CancellationToken cancellationToken)
-        {
-            var todo = await _context.Todos.FindAsync(new object[] { request.Id }, cancellationToken);
+        _context.Todos.Remove(todo);
 
-            if (todo == null)
-            {
-                throw new NotFoundException(nameof(Todo), request.Id);
-            }
+        await _context.SaveEntitiesAsync(cancellationToken);
 
-            _context.Todos.Remove(todo);
-
-            await _context.SaveEntitiesAsync(cancellationToken);
-
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

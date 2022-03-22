@@ -1,20 +1,19 @@
 ﻿using System;
 
-namespace Dddify.Auditing
+namespace Dddify.Auditing;
+
+/// <summary>
+/// This interface can be implemented to store creation information (who and when created).
+/// </summary>
+public interface ICreationAudited
 {
     /// <summary>
-    /// This interface can be implemented to store creation information (who and when created).
+    /// The creator for this entity.
     /// </summary>
-    public interface ICreationAudited
-    {
-        /// <summary>
-        /// The creator for this entity.
-        /// </summary>
-        Guid? CreatedBy { get; set; }
+    Guid? CreatedBy { get; set; }
 
-        /// <summary>
-        /// The created time for this entity.
-        /// </summary>
-        DateTimeOffset? CreatedAt { get; set; }
-    }
+    /// <summary>
+    /// The created time for this entity.
+    /// </summary>
+    DateTimeOffset? CreatedAt { get; set; }
 }

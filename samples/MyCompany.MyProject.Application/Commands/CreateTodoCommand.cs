@@ -1,51 +1,49 @@
-﻿using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Dddify.Timing;
+using Mapster;
+using MediatR;
+using MyCompany.MyProject.Application.Queries;
 using MyCompany.MyProject.Domain.Entities;
+using MyCompany.MyProject.Domain.Enums;
 using MyCompany.MyProject.Domain.ValueObjects;
 using MyCompany.MyProject.Infrastructure;
-using Dddify.Guids;
-using Mapster;
-using MyCompany.MyProject.Application.Queries;
-using MyCompany.MyProject.Domain.Enums;
-using Dddify.Timing;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace MyCompany.MyProject.Application.Commands
+namespace MyCompany.MyProject.Application.Commands;
+
+public class CreateTodoCommand : IRequest<TodoDto>
 {
-    public class CreateTodoCommand : IRequest<TodoDto>
-    {
-        public string Title { get; set; }
+    public string Title { get; set; }
 
-        public Colour Colour { get; set; }
+    public Colour Colour { get; set; }
+}
+
+public class CreateTodoCommandHandler : IRequestHandler<CreateTodoCommand, TodoDto>
+{
+    private readonly ApplicationDbContext _context;
+    private readonly IClock _clock;
+
+    public CreateTodoCommandHandler(ApplicationDbContext context, IClock clock)
+    {
+        _context = context;
+        _clock = clock;
     }
 
-    public class CreateTodoCommandHandler : IRequestHandler<CreateTodoCommand, TodoDto>
+    public async Task<TodoDto> Handle(CreateTodoCommand request, CancellationToken cancellationToken)
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IClock _clock;
+        var todo = new Todo(request.Title, request.Colour);
 
-        public CreateTodoCommandHandler(ApplicationDbContext context, IClock clock)
+        todo.AddItem(new TodoItem
         {
-            _context = context;
-            _clock = clock;
-        }
+            Title = "Title",
+            Note = "Note",
+            Priority = PriorityLevel.High,
+            Reminder = _clock.Now,
+        });
 
-        public async Task<TodoDto> Handle(CreateTodoCommand request, CancellationToken cancellationToken)
-        {
-            var todo = new Todo(request.Title, request.Colour);
+        await _context.Todos.AddAsync(todo, cancellationToken);
+        await _context.SaveEntitiesAsync(cancellationToken);
 
-            todo.AddItem(new TodoItem
-            {
-                Title = "Title",
-                Note = "Note",
-                Priority = PriorityLevel.High,
-                Reminder = _clock.Now,
-            });
-
-            await _context.Todos.AddAsync(todo, cancellationToken);
-            await _context.SaveEntitiesAsync(cancellationToken);
-
-            return todo.Adapt<TodoDto>();
-        }
+        return todo.Adapt<TodoDto>();
     }
 }

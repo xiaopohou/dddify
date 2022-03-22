@@ -1,22 +1,21 @@
 ﻿using System;
 
-namespace Dddify.Guids
+namespace Dddify.Guids;
+
+/// <summary>
+/// Used to generate Ids.
+/// </summary>
+public interface IGuidGenerator
 {
     /// <summary>
-    /// Used to generate Ids.
+    /// Creates a new <see cref="Guid"/> using GUID type <see cref="SequentialGuidType.SequentialAsString"/>.
     /// </summary>
-    public interface IGuidGenerator
-    {
-        /// <summary>
-        /// Creates a new <see cref="Guid"/> using GUID type <see cref="SequentialGuidType.SequentialAsString"/>.
-        /// </summary>
-        Guid Create();
+    Guid Create();
 
-        /// <summary>
-        /// Creates a new <see cref="Guid"/>.
-        /// </summary>
-        /// <param name="guidType"></param>
-        /// <returns></returns>
-        Guid Create(SequentialGuidType guidType);
-    }
+    /// <summary>
+    /// Creates a new <see cref="Guid"/>.
+    /// </summary>
+    /// <param name="guidType"></param>
+    /// <returns></returns>
+    Guid Create(SequentialGuidType guidType);
 }
