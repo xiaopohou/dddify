@@ -1,13 +1,14 @@
 ﻿using System;
 using Dddify.Auditing;
 
-namespace Dddify.Domain.Entities;
-
-[Serializable]
-public abstract class FullAuditedAggregateRoot<TKey> : CreationAuditedAggregateRoot<TKey>, IFullAudited
-    where TKey : IEquatable<TKey>
+namespace Dddify.Domain.Entities
 {
-    public Guid? LastModifiedBy { get; set; }
+    [Serializable]
+    public abstract class FullAuditedAggregateRoot<TKey> : CreationAuditedAggregateRoot<TKey>, IFullAudited
+        where TKey : IEquatable<TKey>
+    {
+        public Guid? LastModifiedBy { get; set; }
 
-    public DateTimeOffset? LastModifiedAt { get; set; }
+        public DateTimeOffset? LastModifiedAt { get; set; }
+    }
 }

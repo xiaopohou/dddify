@@ -1,8 +1,9 @@
 ﻿using System;
 
-namespace Dddify.Timing;
-
-public class ClockOptions
+namespace Dddify.Timing
 {
-    public DateTimeKind DateTimeKind { get; set; } = DateTimeKind.Unspecified;
+    public class ClockOptions
+    {
+        public DateTimeKind DateTimeKind { get; set; } = DateTimeKind.Unspecified;
+    }
 }

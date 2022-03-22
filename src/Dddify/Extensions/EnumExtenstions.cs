@@ -1,26 +1,27 @@
 ﻿using System.Reflection;
 using System.ComponentModel;
 
-namespace System;
-
-/// <summary>
-/// This class is used to provide <see cref="Enum"/> type extension method.
-/// </summary>
-public static class EnumExtenstions
+namespace System
 {
-    public static string GetDescription(this Enum target)
+    /// <summary>
+    /// This class is used to provide <see cref="Enum"/> type extension method.
+    /// </summary>
+    public static class EnumExtenstions
     {
-        var type = target.GetType();
-        var fieldName = Enum.GetName(type, target);
+        public static string GetDescription(this Enum target)
+        {
+            var type = target.GetType();
+            var fieldName = Enum.GetName(type, target);
 
-        if (fieldName != null)
-        {
-            var attribute = type.GetField(fieldName).GetCustomAttribute<DescriptionAttribute>();
-            return attribute?.Description ?? fieldName;
-        }
-        else
-        {
-            return string.Empty;
+            if (fieldName != null)
+            {
+                var attribute = type.GetField(fieldName).GetCustomAttribute<DescriptionAttribute>();
+                return attribute?.Description ?? fieldName;
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿namespace MyCompany.MyProject.Application.Queries;
-
-internal class PriorityLevelDto
+﻿namespace MyCompany.MyProject.Application.Queries
 {
-    public int Value { get; set; }
+    internal class PriorityLevelDto
+    {
+        public int Value { get; set; }
 
-    public string Name { get; set; }
+        public string Name { get; set; }
+    }
 }

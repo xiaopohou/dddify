@@ -4,79 +4,80 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MyCompany.MyProject.Domain.ValueObjects;
-
-public class Colour : ValueObject
+namespace MyCompany.MyProject.Domain.ValueObjects
 {
-    public Colour(string code)
+    public class Colour : ValueObject
     {
-        Code = code;
-    }
-
-    public Colour() { }
-
-    public static Colour From(string code)
-    {
-        var colour = new Colour { Code = code };
-
-        if (!SupportedColours.Contains(colour))
+        public Colour(string code)
         {
-            throw new UnsupportedColourException(code);
+            Code = code;
         }
 
-        return colour;
-    }
+        public Colour() { }
 
-    public static Colour White => new("#FFFFFF");
-
-    public static Colour Red => new("#FF5733");
-
-    public static Colour Orange => new("#FFC300");
-
-    public static Colour Yellow => new("#FFFF66");
-
-    public static Colour Green => new("#CCFF99");
-
-    public static Colour Blue => new("#6666FF");
-
-    public static Colour Purple => new("#9966CC");
-
-    public static Colour Grey => new("#999999");
-
-    public string Code { get; set; }
-
-    public static implicit operator string(Colour colour)
-    {
-        return colour.ToString();
-    }
-
-    public static explicit operator Colour(string code)
-    {
-        return From(code);
-    }
-
-    public override string ToString()
-    {
-        return Code;
-    }
-
-    public static IEnumerable<Colour> SupportedColours
-    {
-        get
+        public static Colour From(string code)
         {
-            yield return White;
-            yield return Red;
-            yield return Orange;
-            yield return Yellow;
-            yield return Green;
-            yield return Blue;
-            yield return Purple;
-            yield return Grey;
-        }
-    }
+            var colour = new Colour { Code = code };
 
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        return SupportedColours;
+            if (!SupportedColours.Contains(colour))
+            {
+                throw new UnsupportedColourException(code);
+            }
+
+            return colour;
+        }
+
+        public static Colour White => new("#FFFFFF");
+
+        public static Colour Red => new("#FF5733");
+
+        public static Colour Orange => new("#FFC300");
+
+        public static Colour Yellow => new("#FFFF66");
+
+        public static Colour Green => new("#CCFF99");
+
+        public static Colour Blue => new("#6666FF");
+
+        public static Colour Purple => new("#9966CC");
+
+        public static Colour Grey => new("#999999");
+
+        public string Code { get; set; }
+
+        public static implicit operator string(Colour colour)
+        {
+            return colour.ToString();
+        }
+
+        public static explicit operator Colour(string code)
+        {
+            return From(code);
+        }
+
+        public override string ToString()
+        {
+            return Code;
+        }
+
+        public static IEnumerable<Colour> SupportedColours
+        {
+            get
+            {
+                yield return White;
+                yield return Red;
+                yield return Orange;
+                yield return Yellow;
+                yield return Green;
+                yield return Blue;
+                yield return Purple;
+                yield return Grey;
+            }
+        }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            return SupportedColours;
+        }
     }
 }

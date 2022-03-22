@@ -1,11 +1,18 @@
-﻿namespace Dddify.Application.Dtos;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-public interface IEntityDto
+namespace Dddify.Application.Dtos
 {
+    public interface IEntityDto
+    {
 
-}
+    }
 
-public interface IEntityDto<TKey> : IEntityDto
-{
-    TKey Id { get; set; }
+    public interface IEntityDto<TKey> : IEntityDto
+    {
+        TKey Id { get; set; }
+    }
 }

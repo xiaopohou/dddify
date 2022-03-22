@@ -1,12 +1,13 @@
 ﻿using Dddify.Auditing;
 using System;
 
-namespace Dddify.Domain.Entities;
-
-public abstract class FullAuditedEntity<TKey> : CreationAuditedEntity<TKey>, IFullAudited
-    where TKey : IEquatable<TKey>
+namespace Dddify.Domain.Entities
 {
-    public Guid? LastModifiedBy { get; set; }
+    public abstract class FullAuditedEntity<TKey> : CreationAuditedEntity<TKey>, IFullAudited
+        where TKey : IEquatable<TKey>
+    {
+        public Guid? LastModifiedBy { get; set; }
 
-    public DateTimeOffset? LastModifiedAt { get; set; }
+        public DateTimeOffset? LastModifiedAt { get; set; }
+    }
 }

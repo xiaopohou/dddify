@@ -1,12 +1,13 @@
 ﻿using System;
 
-namespace Dddify.Application.Dtos;
-
-public abstract class CreationAuditedEntityDto<TKey> : EntityDto<TKey>
+namespace Dddify.Application.Dtos
 {
-    public Guid CreatorId { get; }
+    public abstract class CreationAuditedEntityDto<TKey> : EntityDto<TKey>
+    {
+        public Guid CreatorId { get; }
 
-    public string CreatorName { get; }
+        public string CreatorName { get; }
 
-    public DateTimeOffset? CreationTime { get; set; }
+        public DateTimeOffset? CreationTime { get; set; }
+    }
 }

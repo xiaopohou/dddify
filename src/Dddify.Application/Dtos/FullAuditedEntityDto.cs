@@ -1,12 +1,13 @@
 ﻿using System;
 
-namespace Dddify.Application.Dtos;
-
-public abstract class FullAuditedEntityDto<TKey> : CreationAuditedEntityDto<TKey>
+namespace Dddify.Application.Dtos
 {
-    public Guid LastModifierId { get; }
+    public abstract class FullAuditedEntityDto<TKey> : CreationAuditedEntityDto<TKey>
+    {
+        public Guid LastModifierId { get; }
 
-    public string LastModifierName { get; }
+        public string LastModifierName { get; }
 
-    public DateTimeOffset? LastModificationTime { get; set; }
+        public DateTimeOffset? LastModificationTime { get; set; }
+    }
 }

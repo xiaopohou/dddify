@@ -4,22 +4,23 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Dddify.DependencyInjection;
 
-namespace MyCompany.MyProject.Application.Behaviours;
-
-public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>, ITransientDependency
-    where TRequest : IRequest<TResponse>
+namespace MyCompany.MyProject.Application.Behaviours
 {
-    private readonly ILogger<TRequest> _logger;
-
-    public LoggingBehavior(ILogger<TRequest> logger)
+    public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>, ITransientDependency
+        where TRequest : IRequest<TResponse>
     {
-        _logger = logger;
-    }
+        private readonly ILogger<TRequest> _logger;
 
-    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
-    {
-        _logger.LogInformation($"[dddify] logging...");
+        public LoggingBehavior(ILogger<TRequest> logger)
+        {
+            _logger = logger;
+        }
 
-        return await next();
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        {
+            _logger.LogInformation($"[dddify] logging...");
+
+            return await next();
+        }
     }
 }

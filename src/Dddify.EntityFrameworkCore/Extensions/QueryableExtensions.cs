@@ -3,37 +3,39 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Dddify.EntityFrameworkCore;
-
-/// <summary>
-/// Entity Framework LINQ related extension methods.
-/// </summary>
-public static class QueryableExtensions
+namespace Dddify.EntityFrameworkCore
 {
-    public static async Task<IPagedList<T>> ToPagedListAsync<T>(this IQueryable<T> query, int page, int size, CancellationToken cancellationToken = default)
-    {
-        var total = await query.CountAsync(cancellationToken);
-        var items = await query.Skip((page - 1) * size).Take(size).ToListAsync(cancellationToken);
-        return new PagedList<T>(total, items);
-    }
-
-    public static IQueryable<T> WhereIf<T>(this IQueryable<T> query, bool condition, Expression<Func<T, bool>> expression)
-    {
-        return condition ? query.Where(expression) : query;
-    }
-
     /// <summary>
-    /// Specifies the related objects to include in the query results.
+    /// Entity Framework LINQ related extension methods.
     /// </summary>
-    /// <param name="query">The source <see cref="IQueryable{T}"/> on which to call Include.</param>
-    /// <param name="condition">A boolean value to determine to include <paramref name="path"/> or not.</param>
-    /// <param name="path">The type of navigation property being included.</param>
-    public static IQueryable<T> IncludeIf<T, TProperty>(this IQueryable<T> query, bool condition, Expression<Func<T, TProperty>> path)
-        where T : class
+    public static class QueryableExtensions
     {
-        return condition ? query.Include(path) : query;
+        public static async Task<IPagedList<T>> ToPagedListAsync<T>(this IQueryable<T> query, int page, int size, CancellationToken cancellationToken = default)
+        {
+            var total = await query.CountAsync(cancellationToken);
+            var items = await query.Skip((page - 1) * size).Take(size).ToListAsync(cancellationToken);
+            return new PagedList<T>(total, items);
+        }
+
+        public static IQueryable<T> WhereIf<T>(this IQueryable<T> query, bool condition, Expression<Func<T, bool>> expression)
+        {
+            return condition ? query.Where(expression) : query;
+        }
+
+        /// <summary>
+        /// Specifies the related objects to include in the query results.
+        /// </summary>
+        /// <param name="query">The source <see cref="IQueryable{T}"/> on which to call Include.</param>
+        /// <param name="condition">A boolean value to determine to include <paramref name="path"/> or not.</param>
+        /// <param name="path">The type of navigation property being included.</param>
+        public static IQueryable<T> IncludeIf<T, TProperty>(this IQueryable<T> query, bool condition, Expression<Func<T, TProperty>> path)
+            where T : class
+        {
+            return condition ? query.Include(path) : query;
+        }
     }
 }

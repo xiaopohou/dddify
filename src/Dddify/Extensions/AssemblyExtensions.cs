@@ -1,35 +1,36 @@
 ﻿using System.Collections.Generic;
 
-namespace System.Reflection;
-
-/// <summary>
-/// Extension methods for <see cref="Assembly"/>.
-/// </summary>
-public static class AssemblyExtensions
+namespace System.Reflection
 {
-    public static string GetFullNamePrefix(this Assembly assembly, string nameSectionSeparator)
+    /// <summary>
+    /// Extension methods for <see cref="Assembly"/>.
+    /// </summary>
+    public static class AssemblyExtensions
     {
-        var fullname = assembly.FullName;
-        return fullname.Substring(0, fullname.IndexOf(nameSectionSeparator, StringComparison.Ordinal) + 1);
-    }
-
-    public static IEnumerable<Assembly> LoadAssemblies(this IEnumerable<AssemblyName> assemblyNames)
-    {
-        var assemblies = new List<Assembly>();
-
-        foreach (var assemblyName in assemblyNames)
+        public static string GetFullNamePrefix(this Assembly assembly, string nameSectionSeparator)
         {
-            try
-            {
-                // Try to load the referenced assembly...
-                assemblies.Add(Assembly.Load(assemblyName));
-            }
-            catch
-            {
-                // Failed to load assembly. Skip it.
-            }
+            var fullname = assembly.FullName;
+            return fullname.Substring(0, fullname.IndexOf(nameSectionSeparator, StringComparison.Ordinal) + 1);
         }
 
-        return assemblies;
+        public static IEnumerable<Assembly> LoadAssemblies(this IEnumerable<AssemblyName> assemblyNames)
+        {
+            var assemblies = new List<Assembly>();
+
+            foreach (var assemblyName in assemblyNames)
+            {
+                try
+                {
+                    // Try to load the referenced assembly...
+                    assemblies.Add(Assembly.Load(assemblyName));
+                }
+                catch
+                {
+                    // Failed to load assembly. Skip it.
+                }
+            }
+
+            return assemblies;
+        }
     }
 }

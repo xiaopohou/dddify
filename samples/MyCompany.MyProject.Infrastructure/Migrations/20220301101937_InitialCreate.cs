@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
-
 namespace MyCompany.MyProject.Infrastructure.Migrations
 {
     public partial class InitialCreate : Migration
@@ -15,9 +13,9 @@ namespace MyCompany.MyProject.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    Colour_Code = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Colour_Code = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
-                    ConcurrencyStamp = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
                     CreatedBy = table.Column<Guid>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
                     LastModifiedBy = table.Column<Guid>(type: "TEXT", nullable: true),
@@ -50,7 +48,8 @@ namespace MyCompany.MyProject.Infrastructure.Migrations
                         name: "FK_TodoItems_Todos_TodoId",
                         column: x => x.TodoId,
                         principalTable: "Todos",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(

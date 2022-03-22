@@ -2,15 +2,16 @@
 using MyCompany.MyProject.Domain.Enums;
 using System;
 
-namespace MyCompany.MyProject.Domain.Entities;
-
-public class TodoItem : FullAuditedEntity<Guid>
+namespace MyCompany.MyProject.Domain.Entities
 {
-    public string Title { get; set; }
+    public class TodoItem : FullAuditedEntity<Guid>
+    {
+        public string Title { get; set; }
 
-    public string Note { get; set; }
+        public string Note { get; set; }
 
-    public PriorityLevel Priority { get; set; }
+        public PriorityLevel Priority { get; set; }
 
-    public DateTime? Reminder { get; set; }
+        public DateTime? Reminder { get; set; }
+    }
 }

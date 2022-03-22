@@ -6,41 +6,42 @@ using Dddify.Localization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
-namespace Microsoft.Extensions.DependencyInjection;
-
-/// <summary>
-/// Extensions for configuring Dddify using an <see cref="IDddifyBuilder"/>.
-/// </summary>
-public static class DddifyBuilderExtensions
+namespace Microsoft.Extensions.DependencyInjection
 {
-    public static IDddifyBuilder AddApiResult(this IDddifyBuilder builder)
+    /// <summary>
+    /// Extensions for configuring Dddify using an <see cref="IDddifyBuilder"/>.
+    /// </summary>
+    public static class DddifyBuilderExtensions
     {
-        Check.NotNull(builder, nameof(builder));
-
-        builder.Services.Configure<MvcOptions>(options =>
+        public static IDddifyBuilder AddApiResult(this IDddifyBuilder builder)
         {
-            options.Filters.Add(typeof(ApiExceptionFilter));
-            options.Filters.Add(typeof(ApiResultFilter));
-        });
+            Check.NotNull(builder, nameof(builder));
 
-        builder.Services.AddHttpContextAccessor();
-        builder.Services.AddTransient<IApiResultWrapper, ApiResultWrapper>();
+            builder.Services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(typeof(ApiExceptionFilter));
+                options.Filters.Add(typeof(ApiResultFilter));
+            });
 
-        return builder;
-    }
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddTransient<IApiResultWrapper, ApiResultWrapper>();
 
-    public static IDddifyBuilder AddLocalization(this IDddifyBuilder builder, Action<AppLocalizationOptions> setupAction = null)
-    {
-        Check.NotNull(builder, nameof(builder));
-        Check.NotNull(setupAction, nameof(setupAction));
+            return builder;
+        }
 
-        var options = new AppLocalizationOptions();
-        setupAction?.Invoke(options);
+        public static IDddifyBuilder AddLocalization(this IDddifyBuilder builder, Action<AppLocalizationOptions> setupAction = null)
+        {
+            Check.NotNull(builder, nameof(builder));
+            Check.NotNull(setupAction, nameof(setupAction));
 
-        builder.Services.AddOptions<AppLocalizationOptions>();
-        builder.Services.AddTransient<ISharedStringLocalizer, SharedStringLocalizer>();
-        builder.Services.AddLocalization(c => c.ResourcesPath = options.ResourcesPath);
+            var options = new AppLocalizationOptions();
+            setupAction?.Invoke(options);
 
-        return builder;
+            builder.Services.AddOptions<AppLocalizationOptions>();
+            builder.Services.AddTransient<ISharedStringLocalizer, SharedStringLocalizer>();
+            builder.Services.AddLocalization(c => c.ResourcesPath = options.ResourcesPath);
+
+            return builder;
+        }
     }
 }

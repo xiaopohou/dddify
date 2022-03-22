@@ -3,30 +3,31 @@ using Dddify.Timing;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace Dddify.DependencyInjection;
-
-public class DddifyBuilder : IDddifyBuilder
+namespace Dddify.DependencyInjection
 {
-    public IServiceCollection Services { get; }
-
-    public DddifyBuilder(IServiceCollection services)
+    public class DddifyBuilder : IDddifyBuilder
     {
-        Services = services;
-    }
+        public IServiceCollection Services { get; }
 
-    public SequentialGuidType SequentialGuidType
-    {
-        set
+        public DddifyBuilder(IServiceCollection services)
         {
-            Services.Configure<SequentialGuidGeneratorOptions>(x => x.SequentialGuidType = value);
+            Services = services;
         }
-    }
 
-    public DateTimeKind DateTimeKind
-    {
-        set
+        public SequentialGuidType SequentialGuidType
         {
-            Services.Configure<ClockOptions>(x => x.DateTimeKind = value);
+            set
+            {
+                Services.Configure<SequentialGuidGeneratorOptions>(x => x.SequentialGuidType = value);
+            }
+        }
+
+        public DateTimeKind DateTimeKind
+        {
+            set
+            {
+                Services.Configure<ClockOptions>(x => x.DateTimeKind = value);
+            }
         }
     }
 }

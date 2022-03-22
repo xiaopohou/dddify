@@ -10,40 +10,41 @@ using MyCompany.MyProject.Domain.Entities;
 using Mapster;
 using MyCompany.MyProject.Application.Queries;
 
-namespace MyCompany.MyProject.Application.Commands;
-
-public class UpdateTodoCommand : IRequest<TodoDto>
+namespace MyCompany.MyProject.Application.Commands
 {
-    public Guid Id { get; set; }
-
-    public string Title { get; set; }
-
-    public Colour Colour { get; set; }
-}
-
-public class UpdateTodoCommandHandler : IRequestHandler<UpdateTodoCommand, TodoDto>
-{
-    private readonly ApplicationDbContext _context;
-
-    public UpdateTodoCommandHandler(ApplicationDbContext context)
+    public class UpdateTodoCommand : IRequest<TodoDto>
     {
-        _context = context;
+        public Guid Id { get; set; }
+
+        public string Title { get; set; }
+
+        public Colour Colour { get; set; }
     }
 
-    public async Task<TodoDto> Handle(UpdateTodoCommand request, CancellationToken cancellationToken)
+    public class UpdateTodoCommandHandler : IRequestHandler<UpdateTodoCommand, TodoDto>
     {
-        var todo = await _context.Todos.FindAsync(new object[] { request.Id }, cancellationToken);
+        private readonly ApplicationDbContext _context;
 
-        if (todo == null)
+        public UpdateTodoCommandHandler(ApplicationDbContext context)
         {
-            throw new NotFoundException(nameof(Todo), request.Id);
+            _context = context;
         }
 
-        todo.Title = request.Title;
-        todo.Colour = request.Colour;
+        public async Task<TodoDto> Handle(UpdateTodoCommand request, CancellationToken cancellationToken)
+        {
+            var todo = await _context.Todos.FindAsync(new object[] { request.Id }, cancellationToken);
 
-        await _context.SaveEntitiesAsync(cancellationToken);
+            if (todo == null)
+            {
+                throw new NotFoundException(nameof(Todo), request.Id);
+            }
 
-        return todo.Adapt<TodoDto>();
+            todo.Title = request.Title;
+            todo.Colour = request.Colour;
+
+            await _context.SaveEntitiesAsync(cancellationToken);
+
+            return todo.Adapt<TodoDto>();
+        }
     }
 }
