@@ -1,7 +1,7 @@
 ---
 hero:
   title: Dddify
-  desc: 一个轻量级开源的 ASP.NET CORE 开发框架，它遵循最佳的实践和惯例，为您提供 SOLID 开发体验。
+  desc: 一个轻量级的开源 ASP.NET Core 开发框架，它遵循最佳实践和惯例，为您提供 SOLID 开发体验。
   actions:
     - text: 快速上手
       link: /getting-started
@@ -12,7 +12,7 @@ features:
     title: 领域驱动
     desc:
   - icon: https://gw.alipayobjects.com/zos/bmw-prod/d60657df-0822-4631-9d7c-e7a869c2f21c/k79dmz3q_w126_h126.png
-    title: 简单轻量
+    title: 简单易用
     desc:
   - icon: https://gw.alipayobjects.com/zos/bmw-prod/d1ee0c6f-5aed-4a45-a507-339a4bfe076c/k7bjsocq_w144_h144.png
     title: 基础设施
