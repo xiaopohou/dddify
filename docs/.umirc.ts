@@ -5,5 +5,9 @@ export default defineConfig({
   mode: 'site',
   base: '/',
   publicPath: './',
+  history: { 
+    type: 'hash' 
+  },
+  ignoreMomentLocale: true,
   // more config: https://d.umijs.org/config
 });
